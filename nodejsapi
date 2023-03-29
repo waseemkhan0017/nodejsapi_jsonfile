@@ -1,0 +1,46 @@
+var express = require('express');
+const userss=require('../jsondata/udata.js');
+var router = express.Router();
+
+/* GET home page. */
+router.get('/all', function(req, res, next) {
+  res.send(userss);
+});///get
+
+router.get('/all/:id', function(req, res, next) {
+
+  const user=userss.find(c=>c.id===parseInt(req.params.id));
+  if(!user) res.status(404).send('The user with the given ID was not found.');
+  res.send(user);
+
+});///get id 
+
+router.post('/all', function(req, res, next) {
+  const user={
+    id:userss.length+1,
+    name:req.body.name,
+    age:req.body.age
+  };
+  userss.push(user);
+  res.send(user);
+});//post
+
+router.put('/all/:id', function(req, res, next) {
+  const user=userss.find(c=>c.id===parseInt(req.params.id));
+  if(!user) res.status(404).send('The user with the given ID was not found.');
+  user.name=req.body.name;
+  user.age=req.body.age;
+  res.send(user);
+
+});//put
+
+router.delete('/all/:id', function(req, res, next){
+  const user=userss.find(c=>c.id===parseInt(req.params.id));
+  if(!user) res.status(404).send('The user with the given ID was not found.');
+  const index=userss.indexOf(user);
+  userss.splice(index,1);
+  res.send(user);
+
+});//DELETE
+
+module.exports = router;
